@@ -1,5 +1,0 @@
-LeetCode
-========
-
-Permutations
-Permutations II
