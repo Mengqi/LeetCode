@@ -1,54 +1,38 @@
 public class Solution {
     public int atoi(String str) {
-        if ((str == null) || (str.length() == 0)) {
+        long sum = 0;
+
+        int length = str.length();
+        if (length == 0) {
             return 0;
         }
-
-        boolean positive = true;
+        
         int pos = 0;
-        while (pos < str.length()) {
-            char ch = str.charAt(pos);
-            if (ch == '+') {
-                pos++;
-                break;
-            } else if (ch == '-') {
-                positive = false;
-                pos++;
-                break;
-            } else if ((ch >= '0') && (ch <= '9')){
-                break;
-            } else if (ch == ' '){
-                pos++;
-            } else {
-                return 0;
-            }
+        while (pos < length && str.charAt(pos) == ' ') {
+            pos++;
         }
-
-        int sum = 0;
-        while (pos < str.length()) {
-            char ch = str.charAt(pos);
-            if ((ch >= '0') && (ch <= '9')){
-                int digit = ch - '0';
-                if (positive) {
-                    if (sum*10.0 + digit > Integer.MAX_VALUE) {
-                        return Integer.MAX_VALUE;
-                    }
-                } else {
-                    if (-(sum*10.0 + digit) < Integer.MIN_VALUE) {
-                        return Integer.MIN_VALUE;
-                    }
-                }
-                sum = sum * 10 + digit;
-                pos++;
-            } else {
+        
+        boolean flag = true;    // true for '+'; false for '-'
+        if (pos < length && str.charAt(pos) == '+') {
+            flag = true;
+            pos++;
+        } else if (pos < length && str.charAt(pos) == '-') {
+            flag = false;
+            pos++;
+        }
+        
+        while (pos < length && Character.isDigit(str.charAt(pos))) {
+            int digit = str.charAt(pos) - '0';
+            sum = sum * 10 + digit;
+            if (sum > Integer.MAX_VALUE) {
+                sum = (flag == true) ? Integer.MAX_VALUE : Integer.MIN_VALUE;
                 break;
             }
+            pos++;
         }
 
-        if (positive == false) {
-            sum = -sum;
-        }
+        sum = (flag == true) ? sum : -sum;
 
-        return sum;
+        return (int) sum;
     }
 }

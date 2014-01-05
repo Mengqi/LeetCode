@@ -11,31 +11,36 @@
  */
 public class Solution {
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
-        if ((l1 == null) && (l2 == null)) {
-            return null;
-        } else if (l1 == null) {
-            return l2;
-        } else if (l2 == null) {
-            return l1;
-        }
-
         ListNode head = null;
         ListNode prev = null;
-        int digit;
         int carry = 0;
-        ListNode node1 = l1;
-        ListNode node2 = l2;
-        while ((node1 != null) && (node2 != null)) {
-            digit = node1.val + node2.val + carry;
-            if (digit >= 10) {
-                digit = digit - 10;
-                carry = 1;
+
+        while (l1 != null && l2 != null) {
+            int num = l1.val + l2.val + carry;
+            int digit = num % 10;
+            carry = (num - digit) / 10;
+            
+            ListNode node = new ListNode(digit);
+
+            if (head == null) {
+                head = node;
+                prev = node;
             } else {
-                carry = 0;
+                prev.next = node;
+                prev = node;
             }
+
+            l1 = l1.next;
+            l2 = l2.next;
+        }
+        
+        while (l1 != null) {
+            int num = l1.val + carry;
+            int digit = num % 10;
+            carry = (num - digit) / 10;
 
             ListNode node = new ListNode(digit);
-            node.next = null;
+
             if (head == null) {
                 head = node;
                 prev = node;
@@ -44,21 +49,16 @@ public class Solution {
                 prev = node;
             }
 
-            node1 = node1.next;
-            node2 = node2.next;
+            l1 = l1.next;
         }
-
-        while (node1 != null) {
-            digit = node1.val + carry;
-            if (digit >= 10) {
-                digit = digit - 10;
-                carry = 1;
-            } else {
-                carry = 0;
-            }
+        
+        while (l2 != null) {
+            int num = l2.val + carry;
+            int digit = num % 10;
+            carry = (num - digit) / 10;
 
             ListNode node = new ListNode(digit);
-            node.next = null;
+
             if (head == null) {
                 head = node;
                 prev = node;
@@ -67,43 +67,14 @@ public class Solution {
                 prev = node;
             }
 
-            node1 = node1.next;
+            l2 = l2.next;
         }
-
-        while (node2 != null) {
-            digit = node2.val + carry;
-            if (digit >= 10) {
-                digit = digit - 10;
-                carry = 1;
-            } else {
-                carry = 0;
-            }
-
-            ListNode node = new ListNode(digit);
-            node.next = null;
-            if (head == null) {
-                head = node;
-                prev = node;
-            } else {
-                prev.next = node;
-                prev = node;
-            }
-
-            node2 = node2.next;
+        
+        if (carry != 0) {
+            ListNode node = new ListNode(carry);
+            prev.next = node;
         }
-
-        if (carry == 1) {
-            ListNode node = new ListNode(1);
-            node.next = null;
-            if (head == null) {
-                head = node;
-                prev = node;
-            } else {
-                prev.next = node;
-                prev = node;
-            }
-        }
-
+        
         return head;
     }
 }

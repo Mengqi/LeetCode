@@ -1,38 +1,29 @@
 public class Solution {
     public boolean isValid(String s) {
-        if ((s == null) || (s.length() == 0)) {
-            return true;
-        }
-
         Stack<Character> stack = new Stack<Character>();
-        for (int i = 0; i < s.length(); i++) {
-            char ch = s.charAt(i);
-            if (ch == '(' || ch == '[' || ch == '{') {
+        
+        int pos = 0;
+        while (pos < s.length()) {
+            char ch = s.charAt(pos);
+            if (ch == '{' || ch == '(' || ch == '[') {
                 stack.push(ch);
-            } else if (ch == ')' || ch == ']' || ch == '}') {
-                if (stack.isEmpty()) {
-                    return false;
-                }
-                char left = stack.pop();
-                if (!isMatch(left, ch)) {
+            } else {
+                if (stack.isEmpty() || !isMatch(stack.pop(), ch)) {
                     return false;
                 }
             }
+            pos++;
         }
-
-        if (stack.isEmpty()) {
-            return true;
-        } else {
-            return false;
-        }
+        
+        return stack.isEmpty();
     }
-
-    private boolean isMatch(char left, char right) {
-        if ((left == '(') && (right == ')')) {
+    
+    private boolean isMatch(char ch1, char ch2) {
+        if (ch1 == '(' && ch2 == ')') {
             return true;
-        } else if ((left == '[') && (right == ']')) {
+        } else if (ch1 == '[' && ch2 == ']') {
             return true;
-        } else if ((left == '{') && (right == '}')) {
+        } else if (ch1 == '{' && ch2 == '}') {
             return true;
         } else {
             return false;

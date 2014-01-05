@@ -1,46 +1,45 @@
 public class Solution {
     public double findMedianSortedArrays(int A[], int B[]) {
-        int length = A.length + B.length;
+        int aLength = A.length;
+        int bLength = B.length;
+        int length = aLength + bLength;
+        
+        double median;
         if (length % 2 == 0) {
-            int median1 = findKthElement(A, 0, A.length-1, B, 0, B.length-1, length/2);
-            int median2 = findKthElement(A, 0, A.length-1, B, 0, B.length-1, length/2+1);
-            double median = (double)(median1 + median2) / 2;
-            return median;
+            int median1 = findKthElement(A, 0, aLength-1, B, 0, bLength-1, length/2);
+            int median2 = findKthElement(A, 0, aLength-1, B, 0, bLength-1, length/2+1);
+            median = (double) (median1 + median2) / 2;
         } else {
-            double median = findKthElement(A, 0, A.length-1, B, 0, B.length-1, length/2+1);
-            return median;
+            median = findKthElement(A, 0, aLength-1, B, 0, bLength-1, length/2+1);
         }
+        return median;
     }
-
-    // k start from 0
+    
     private int findKthElement(int A[], int aStart, int aEnd, int B[], int bStart, int bEnd, int k) {
         if (aStart > aEnd) {
             return B[bStart + k - 1];
         }
-
         if (bStart > bEnd) {
             return A[aStart + k - 1];
         }
 
         int aLength = aEnd - aStart + 1;
         int bLength = bEnd - bStart + 1;
-        int aMid = (aStart + aEnd) / 2;
-        int bMid = (bStart + bEnd) / 2;
+        int aMid = (aStart + aEnd) / 2; // also = (aStart + 0 + aStart + aLength - 1) / 2 = aStart + (aLength - 1) / 2
+        int bMid = (bStart + bEnd) / 2; // also = (bStart + 0 + bStart + bLength - 1) / 2 = bStart + (bLength - 1) / 2
         if (k <= (aLength-1)/2 + (bLength-1)/2 + 1) {
-            // discard large half with Mid
+            // discard largest half including the median
             if (A[aMid] > B[bMid]) {
-                // [aStart, aMid] [bStart, bEnd]
                 return findKthElement(A, aStart, aMid-1, B, bStart, bEnd, k);
             } else {
-                // [aStart, aEnd] [bStart, bMid]
                 return findKthElement(A, aStart, aEnd, B, bStart, bMid-1, k);
             }
         } else {
-            // discard small half with Mid
-            if (A[aMid] > B[bMid]) {
-                return findKthElement(A, aStart, aEnd, B, bMid+1, bEnd, k - (bMid + 1 - bStart));
+            // discard smallest half including the median
+            if (A[aMid] < B[bMid]) {
+                return findKthElement(A, aMid+1, aEnd, B, bStart, bEnd, k - (aMid - aStart + 1));
             } else {
-                return findKthElement(A, aMid+1, aEnd, B, bStart, bEnd, k - (aMid + 1 - aStart));
+                return findKthElement(A, aStart, aEnd, B, bMid+1, bEnd, k - (bMid - bStart + 1));
             }
         }
     }
