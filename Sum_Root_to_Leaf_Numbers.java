@@ -9,27 +9,20 @@
  */
 public class Solution {
     public int sumNumbers(TreeNode root) {
-        return rootNum(root, 0);
+        return getSum(root, 0);
     }
     
-    private int rootNum(TreeNode node, int prefix) {
-        if (node == null) {
+    private int getSum(TreeNode root, int prefix) {
+        if (root == null) {
+            return 0;
+        }
+        
+        prefix = prefix * 10 + root.val;
+        if (root.left == null && root.right == null) {
             return prefix;
+        } else {
+            return getSum(root.left, prefix) + getSum(root.right, prefix);
         }
-        
-        int num = prefix * 10 + node.val;
-        if ((node.left == null) && (node.right == null)) {
-            return num;
-        }
-
-        int sum = 0;
-        if (node.left != null) {
-            sum = sum + rootNum(node.left, num);
-        }
-        if (node.right != null) {
-            sum = sum + rootNum(node.right, num);
-        }
-        
-        return sum;
     }
+    
 }
